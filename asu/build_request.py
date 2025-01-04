@@ -6,7 +6,7 @@ from asu.config import settings
 STRING_PATTERN = r"^[\w.,-]*$"
 TARGET_PATTERN = r"^[\w]*/[\w]*$"
 PKG_VERSION_PATTERN = r"^[\w.,~-]*$"
-
+CONFIG_PATTERN= r"^[\w.,-=\"\ ]*$"
 
 class BuildRequest(BaseModel):
     distro: Annotated[
@@ -141,6 +141,14 @@ class BuildRequest(BaseModel):
             """.strip()
         ),
     ] = {}
+    custom_repositories: Annotated[
+        dict[str, str],
+        Field(
+            description="""
+                Custom repositories for user packages.
+            """.strip()
+        ),
+    ] = {}
     repository_keys: Annotated[
         list[str],
         Field(
@@ -158,3 +166,19 @@ class BuildRequest(BaseModel):
             """.strip(),
         ),
     ] = None
+    configs: Annotated[
+        list[Annotated[str, Field(pattern=CONFIG_PATTERN)]],
+        Field(
+            examples=[[
+            "CONFIG_VERSION_DIST=MyRouterOS",
+            "CONFIG_VERSION_NUMBER=1.6",
+            "CONFIG_TARGET_ROOTFS_TARGZ=y",
+            "CONFIG_TARGET_ROOTFS_JFFS2=y",
+            "# CONFIG_TARGET_ROOTFS_SQUASHFS is not set"
+            ]],
+            description="""
+                List of configs, only the few ones not related to kernel/packages 
+                as they will not be recompiled.
+            """.strip(),
+        ),
+    ] = []

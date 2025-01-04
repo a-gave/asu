@@ -1,0 +1,53 @@
+version: "3"
+
+volumes:
+  redis:
+
+services:
+  server:
+    image: "asu:latest"
+    build:
+      context: ./
+      dockerfile: Containerfile.dev
+    restart: always
+    environment:
+      - REDIS_URL=redis://redis/
+    ports:
+      - "0.0.0.0:8001:8000"
+    depends_on:
+      - redis
+    volumes:
+      - ./asu:/app/asu:rw
+      - $PUBLIC_PATH:/app/public:rw
+
+  worker:
+    image: "asu:latest"
+    build:
+      context: ./
+      dockerfile: Containerfile.dev
+    restart: always
+    command: rqworker --with-scheduler
+    environment:
+      - CONTAINER_HOST=unix://$CONTAINER_SOCK
+      - REDIS_URL=redis://redis/
+    volumes:
+      - $PUBLIC_PATH:/app/public:rw
+      - $CONTAINER_SOCK:$CONTAINER_SOCK:rw
+      - ./asu:/app/asu:rw
+    depends_on:
+      - redis
+
+  redis:
+    image: "docker.io/redis/redis-stack-server"
+    restart: always
+    volumes:
+      - redis:/data/:rw
+
+  squid:
+    image: "docker.io/ubuntu/squid:latest"
+    restart: always
+    ports:
+      - "127.0.0.1:3128:3128"
+    volumes:
+      - "./misc/snippet.conf:/etc/squid/conf.d/snippet.conf:ro"
+      - "./squid/:/var/spool/squid/:rw"

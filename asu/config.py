@@ -57,12 +57,17 @@ class Settings(BaseSettings):
     json_path: Path = public_path / "json" / "v1"
     redis_url: str = "redis://localhost:6379"
     upstream_url: str = "https://downloads.openwrt.org"
-    allow_defaults: bool = False
+    allow_defaults: bool = True
     async_queue: bool = True
     branches_file: Union[str, Path, None] = None
     max_custom_rootfs_size_mb: int = 1024
     max_defaults_length: int = 20480
-    repository_allow_list: list = []
+    repository_allow_list: list = [
+        'http://downloads.openwrt.org',
+        'https://downloads.openwrt.org',
+        'http://feed.libremesh.org',
+        'https://feed.libremesh.org'
+    ]
     base_container: str = "ghcr.io/openwrt/imagebuilder"
     update_token: Union[str, None] = "foobar"
     container_host: str = "localhost"
@@ -70,18 +75,18 @@ class Settings(BaseSettings):
     branches: dict = {
         "SNAPSHOT": {
             "path": "snapshots",
-            "enabled": True,
+            "enabled": False,
             "path_packages": "DEPRECATED",
             "package_changes": package_changes(),
         },
-        "24.10": release(27990),
-        "23.05": release(23069),
-        "22.03": release(19160),
-        "21.02": release(15812, enabled=True),  # Enabled for now...
+        "24.10": release(27990, enabled=False),
+        "23.05": release(23069, enabled=True),
+        "22.03": release(19160, enabled=False),
+        "21.02": release(15812, enabled=False),  # Enabled for now...
     }
     server_stats: str = "/stats"
     log_level: str = "INFO"
-    squid_cache: bool = False
+    squid_cache: bool = True
 
 
 settings = Settings()
