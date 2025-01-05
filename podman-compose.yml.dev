@@ -17,8 +17,9 @@ services:
     depends_on:
       - redis
     volumes:
-      - ./asu:/app/asu:rw
       - $PUBLIC_PATH:/app/public:rw
+      - ./asu:/app/asu:rw
+      - $DL_PATH:/app/dl:rw
 
   worker:
     image: "asu:latest"
@@ -34,6 +35,8 @@ services:
       - $PUBLIC_PATH:/app/public:rw
       - $CONTAINER_SOCK:$CONTAINER_SOCK:rw
       - ./asu:/app/asu:rw
+      - $DL_PATH:/app/dl:rw
+
     depends_on:
       - redis
 

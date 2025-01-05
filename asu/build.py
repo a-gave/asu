@@ -83,6 +83,21 @@ def build(build_request: BuildRequest, job=None):
                 }
             )
 
+    # cache downloads
+    if not is_snapshot_build(build_request.version):
+        if not build_request.version.lower().endswith("snapshot"):
+            dl_dir: Path = settings.public_path / "dl" / build_request.version / build_request.target
+            dl_dir.mkdir(parents=True, exist_ok=True)
+            mounts.append(
+                {
+                    "type": "bind",
+                    "source": str(dl_dir),
+                    "target": "/builder/dl/",
+                    "read_only": False,
+                    "chown": True
+                },
+            )
+
     job.meta["imagebuilder_status"] = "container_setup"
     job.save_meta()
 

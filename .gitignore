@@ -27,3 +27,4 @@ asu.egg-info/
 .coverage
 **/__pycache__/
 *.pyc
+*~
