@@ -6,7 +6,10 @@ from asu.config import settings
 STRING_PATTERN = r"^[\w.,-]*$"
 TARGET_PATTERN = r"^[\w]*/[\w]*$"
 PKG_VERSION_PATTERN = r"^[\w.,~-]*$"
-CONFIG_PATTERN= r"^(# CONFIG_[\w_.-]+ is not set|CONFIG_[\w_.-]+=([\w_.-]+$|\"[^\"][\w_.-]+\"))$"
+CONFIG_PATTERN = (
+    r"^(# CONFIG_[\w_.-]+ is not set|CONFIG_[\w_.-]+=([\w_.-]+$|\"[^\"][\w_.-]+\"))$"
+)
+
 
 class BuildRequest(BaseModel):
     distro: Annotated[
@@ -169,13 +172,15 @@ class BuildRequest(BaseModel):
     configs: Annotated[
         list[Annotated[str, Field(pattern=CONFIG_PATTERN)]],
         Field(
-            examples=[[
-            "CONFIG_VERSION_DIST=MyRouterOS",
-            "CONFIG_VERSION_NUMBER=1.6",
-            "CONFIG_TARGET_ROOTFS_TARGZ=y",
-            "CONFIG_TARGET_ROOTFS_JFFS2=y",
-            "# CONFIG_TARGET_ROOTFS_SQUASHFS is not set"
-            ]],
+            examples=[
+                [
+                    "CONFIG_VERSION_DIST=MyRouterOS",
+                    "CONFIG_VERSION_NUMBER=1.6",
+                    "CONFIG_TARGET_ROOTFS_TARGZ=y",
+                    "CONFIG_TARGET_ROOTFS_JFFS2=y",
+                    "# CONFIG_TARGET_ROOTFS_SQUASHFS is not set",
+                ]
+            ],
             description="""
                 List of configs, only the few ones not related to kernel/packages 
                 as they will not be recompiled.

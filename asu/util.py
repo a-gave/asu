@@ -106,7 +106,7 @@ def get_configs_hash(configs: list) -> str:
     Returns:
         str: hash of `req`
     """
-    return get_str_hash(" ".join(sorted(list(set(configs)))))
+    return get_str_hash(" ".join(sorted(set(configs))))
 
 
 def get_manifest_hash(manifest: dict[str, str]) -> str:

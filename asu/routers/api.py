@@ -18,7 +18,8 @@ from asu.util import (
 )
 
 import re
-configs_extract = r"^# (CONFIG_[\w_.-]) is not set|(CONFIG_[\w_.-]+)"
+
+configs_extract = r"^# (CONFIG_[\w_.-]) is not set|^(CONFIG_[\w_.-]+)"
 
 router = APIRouter()
 
@@ -76,9 +77,9 @@ def validate_request(build_request: BuildRequest) -> tuple[dict, int]:
 
     if build_request.configs:
         for config in build_request.configs:
-            config_key = re.search(configs_extract,config)
+            config_key = re.search(configs_extract, config)
             if config_key[0] not in settings.configs_allowed:
-                return validation_failure("Illegal config requested: {config_key[0]}")
+                return validation_failure(f"Illegal config requested: {config_key[0]}")
 
     branch = get_branch(build_request.version)["name"]
 

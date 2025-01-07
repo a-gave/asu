@@ -63,10 +63,10 @@ class Settings(BaseSettings):
     max_custom_rootfs_size_mb: int = 1024
     max_defaults_length: int = 20480
     repository_allow_list: list = [
-        'http://downloads.openwrt.org',
-        'https://downloads.openwrt.org',
-        'http://feed.libremesh.org',
-        'https://feed.libremesh.org'
+        "http://downloads.openwrt.org",
+        "https://downloads.openwrt.org",
+        "http://feed.libremesh.org",
+        "https://feed.libremesh.org",
     ]
     base_container: str = "ghcr.io/openwrt/imagebuilder"
     update_token: Union[str, None] = "foobar"
@@ -88,11 +88,12 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     squid_cache: bool = True
     configs_allowed: list = [
-        'CONFIG_VERSION_DIST',
-        'CONFIG_VERSION_NUMBER',
-        'CONFIG_TARGET_ROOTFS_TARGZ',
-        'CONFIG_TARGET_ROOTFS_JFFS2',
-        'CONFIG_TARGET_ROOTFS_SQUASHFS'
+        "CONFIG_VERSION_DIST",
+        "CONFIG_VERSION_NUMBER",
+        "CONFIG_TARGET_ROOTFS_TARGZ",
+        # 'CONFIG_TARGET_ROOTFS_JFFS2',
+        # 'CONFIG_TARGET_ROOTFS_SQUASHFS'
     ]
+
 
 settings = Settings()

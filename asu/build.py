@@ -86,7 +86,12 @@ def build(build_request: BuildRequest, job=None):
     # cache downloads
     if not is_snapshot_build(build_request.version):
         if not build_request.version.lower().endswith("snapshot"):
-            dl_dir: Path = settings.public_path / "dl" / build_request.version / build_request.target
+            dl_dir: Path = (
+                settings.public_path
+                / "dl"
+                / build_request.version
+                / build_request.target
+            )
             dl_dir.mkdir(parents=True, exist_ok=True)
             mounts.append(
                 {
@@ -94,7 +99,7 @@ def build(build_request: BuildRequest, job=None):
                     "source": str(dl_dir),
                     "target": "/builder/dl/",
                     "read_only": False,
-                    "chown": True
+                    "chown": True,
                 },
             )
 
@@ -269,10 +274,12 @@ def build(build_request: BuildRequest, job=None):
     if build_request.repositories:
         log.info("Appending local repositories")
         returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
-            container, ["sh", "-c",
-                (
-                    "cat /builder/repositories.conf_local >> /builder/repositories.conf"
-                )]
+            container,
+            [
+                "sh",
+                "-c",
+                ("cat /builder/repositories.conf_local >> /builder/repositories.conf"),
+            ],
         )
         if returncode:
             report_error(job, "Could not append local repositories")
@@ -307,12 +314,16 @@ def build(build_request: BuildRequest, job=None):
     log.debug(f"Packages Hash: {packages_hash}")
 
     if build_request.configs:
-        log.info("Appling local configs")
+        log.info("Applying local configs")
         returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
-            container, ["sh", "-c",
+            container,
+            [
+                "sh",
+                "-c",
                 (
                     "for config in $(grep '#' .config_local | awk '{print $2}'); do sed -i 's/'$config'.*//' .config ; done; cat .config_local >> .config"
-                )]
+                ),
+            ],
         )
         if returncode:
             report_error(job, "Could not apply local configs")
